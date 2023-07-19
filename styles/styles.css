@@ -1,0 +1,98 @@
+body {
+    background-image: url("/assets/images/bg.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: 100% 100%;
+ }
+ 
+#mainDiv {
+    display: flex;
+    flex-direction: row;
+    height:80vh;
+    margin: auto;
+    justify-content: center;
+    margin-top: 50px;
+
+}
+.secondaryDiv {
+    width: 50%;
+    height: 80vh;
+}
+#div1{
+    background-color: skyblue;
+    text-align: center;
+    color: white;
+}
+#div1 > h3{
+    margin-top:30%
+}
+#div1 >p {
+    margin-top:20%;
+    text-align: justify;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+#div2{
+    background-color: white;
+    justify-content: center;
+}
+#div2 > p{
+    margin-left: 10%;
+    margin-top: 10%;
+    font-size: 16px;
+}
+#div2 >h1{
+    text-align: center;
+    margin-top: 10%;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 60%;
+    margin: auto;
+
+}
+input{
+    height:50px;
+    margin-top: 20px;
+}
+label{
+    margin-top: 20px;
+}
+#submitBtn{
+    margin-top: 5%;
+    width:150px;
+    height: 50px;
+    display: block;
+    margin: auto;
+    margin-top: 30px;
+    background: linear-gradient(90deg,rgb(0, 0, 255), rgb(135, 206, 235), rgb(135, 206, 235) 90%, rgb(255,0,144));
+}
+form > div{
+    margin-top:1px;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#ORDiv{
+    display: flex;
+    flex-direction: row;
+}
+
+
+#hrLine {
+    width: 50%; 
+    text-align: center; 
+    border-bottom: 1px solid #000; 
+    line-height: 0.1em;
+    margin: 10px 0 20px; 
+    display: block;
+    margin: auto;
+    margin-top: 40px;
+ } 
+ 
+ #hrLine span { 
+     background:#fff; 
+     padding:0 10px; 
+ }

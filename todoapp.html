@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles/todoStyles.css"></link>
+    
+<script src="https://kit.fontawesome.com/6a4d4b7faa.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <h5>Main Board</h5>
+    <div class="mainDiv" id="mainDiv">
+        <div class="card" id="card1">
+           <div id="titleDiv1" class="titleDiv">
+            <input type="text" placeholder="list title" id="listTitle1" class="listTitleClass">
+            <div class="editdeletelist">
+                <button class="BtnClass" id="saveListTitleBtn1" onclick="saveListTitle(event)">Save</button>
+                <button class="BtnClass" id="editTitleBtn1" style="display: none;" onclick="EditListTitle(event)">Edit title</button>
+                <button class="BtnClass" id="editTitleBtn1" style="display: none;" onclick="deleteList(event)">Delete list</button>
+            </div>
+           </div>
+           <div id="addTask1"  class="addTask"  onclick="addNewTask(event)">
+            <button class="Rbutton" id="addbtn1" >+</button>
+            <p>Add new task</p>
+           </div>
+           <div id="newAdded1" class="newAdded">
+              <ul class="list-group" id="items1"></ul>
+           </div>
+          <div id="dropdownmenu1" class="dropdownmenu">
+            <div id="dropdownrow1" class="dropdownrow">
+                <p id="compltetedLength1" class="compltetedLength">Completed</p>
+                <i id="arrow1" class="fa-solid fa-angle-up"></i>
+            </div>
+            <div id="dropdownitems1" class="dropdownitems">
+               
+            </div>
+          </div>
+        </div>
+        <button id="newListBtn" onclick="onBtnClick(event)">Add new list</button>
+    </div>
+</body>
+<script src="/todo.js"></script> 
+
+</html>
