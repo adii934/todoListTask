@@ -9,7 +9,7 @@ function deleteButton(event){
   
   deleteBtn.parentNode.parentNode.parentNode.parentNode.remove()
 }
-
+//mongodb+srv://adilali:12345@adil.klapiyg.mongodb.net/?retryWrites=true&w=majority
 function editButton(event){
   console.log("FD",event.target.id)
   let editBtn = event.target;
@@ -105,7 +105,7 @@ function addNewTask(event) {
     
     let items = document.getElementById(`items${j}`);
     let li = document.createElement("li");
-    li.setAttribute("id", `newLi${i}`);
+    li.setAttribute("id", `newLi${i}${j}`);
     li.classList.add("list-group-items");
     let newDivContainer = document.createElement("div");
   
