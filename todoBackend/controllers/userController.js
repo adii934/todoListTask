@@ -11,10 +11,11 @@ const user=async(req,res)=>{
     }
 }
 const getUser=async(req,res)=>{
+    
     try{
-       const user=await userSchema.findOne({email:req.params.email})
+       const user=await userSchema.find()
        console.log("user",user)
-       res.status(200).send(user.toString())
+       res.status(200).send(user)
     }catch(e){
         res.status(400).send(e.toString())
     }

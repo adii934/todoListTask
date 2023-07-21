@@ -1,16 +1,141 @@
 var i = 0; //a global variable for assigning different id to elements
 var j = 1; //a global variable for assigning ids to different lists
 var completedTasks = []; // a list for storing tasks
+var tasks=[]
+const todoBaseUrl='http://localhost:3500/task'
+async function getTasks(){
+  let response=await fetch(todoBaseUrl)
+  let data=await response.json()
+  console.log("data",data)
+  data.forEach((task)=>{
+    tasks.push(task)
+  })
+}
+getTasks()
+console.log("TasksArray",tasks)
 
-function deleteButton(event){
+
+
+// async function populateList(){
+//   let mainDiv=document.getElementById('mainDiv')
+//   tasks.forEach((task)=>{
+
+//   })
+// }
+
+function onRadioBtn(event){
+  const radioInput1=event.target
+  const listItem=radioInput1.closest(".list-group-items")
+  let radioInput=listItem.querySelector('.radioBtnClass')
+  console.log("close",listItem)
+  console.log("radiobut",radioInput)
+  console.log("RADIO", radioInput.parentNode.parentNode.parentNode.parentNode.nextSibling.nextSibling.firstChild.nextSibling.nextSibling.nextSibling)
+  let dropDownMenu=document.getElementById(`dropdownmenu${j}`)
+  dropDownMenu.style.display="block"
+  const taskExists = completedTasks.some(
+    (task) =>
+      task.title === radioInput.nextSibling.firstChild.innerText &&
+      task.detail === radioInput.nextSibling.firstChild.nextSibling.innerText
+  );
+  if(radioInput.checked && !taskExists) {
+    const isDelegatedEvent = !event.currentTarget.contains(event.target);
+    console.log("DELEGATED", isDelegatedEvent)
+    if(!isDelegatedEvent){
+    radioInput.parentElement.style.display = "none";
+    console.log("Checked");
+    let ele = radioInput.nextSibling.firstChild.innerText;
+    let eleDetail = radioInput.nextSibling.firstChild.nextSibling.innerText;
+    completedTasks.push({
+      title: ele,
+      detail: eleDetail,
+    });
+    console.log("HI", completedTasks);
+    document.getElementById(
+      `compltetedLength${j}`
+    ).innerHTML = `Completed(${completedTasks.length})`;
+    let newTaskDiv = document.createElement("div");
+    newTaskDiv.setAttribute("id", `newTaskDiv${i}${j}`);
+    newTaskDiv.classList.add("newtaskDivClass");
+    let completedTaskTitle = document.createElement("del");
+    completedTaskTitle.setAttribute("id", `completedTaskTitle${i}`);
+    completedTaskTitle.innerHTML = ele;
+    completedTaskTitle.classList.add('completedTaskTitleClass')
+    let compTaskDelBtn = document.createElement("i");
+    compTaskDelBtn.addEventListener("mouseenter", (event) => {
+      compTaskDelBtn.style.color = "red";
+    });
+    compTaskDelBtn.addEventListener("mouseleave", (event) => {
+      compTaskDelBtn.style.color = "black";
+    });
+    let tickMark = document.createElement("i");
+    tickMark.classList.add("fa-regular", "fa-check");
+    
+    tickMark.setAttribute("id",radioInput.parentNode.id);
+    tickMark.style.cursor = "pointer";
+    compTaskDelBtn.classList.add("fa-solid", "fa-trash", "compTaskDelBtn");
+    console.log("new",document.getElementById(`dropdownitems${j}`))
+    let dropdownitems = document.getElementById(`dropdownitems${j}`);
+    newTaskDiv.appendChild(tickMark);
+    newTaskDiv.appendChild(completedTaskTitle);
+    newTaskDiv.appendChild(compTaskDelBtn);
+    console.log()
+    radioInput.parentNode.parentNode.parentNode.parentNode.nextSibling.nextSibling.firstChild.nextSibling.nextSibling.nextSibling.appendChild(newTaskDiv);
+    // radioInput.parentNode.remove()
+    compTaskDelBtn.addEventListener("click", (event) => {
+      
+      compTaskDelBtn.parentNode.remove();
+      radioInput.parentNode.style.display = "none";
+      // let newList = completedTasks.filter((item) => {
+      //   return item.title != radioInput.nextSibling.firstChild.innerText;
+      // });
+      // completedTasks = newList;
+      // document.getElementById(
+      //   `compltetedLength${i}`
+      // ).innerHTML = `Completed(${completedTasks.length})`;
+    });
+
+    tickMark.addEventListener("click", (event) => {
+      let newListAfterUndelete=completedTasks.filter((item)=>{
+       return tickMark.nextSibling.innerText!=item.title
+      })
+      completedTasks=newListAfterUndelete
+      document.getElementById(
+        `compltetedLength${j}`
+      ).innerHTML = `Completed(${completedTasks.length})`;
+      let selected = document.getElementById(tickMark.id);
+      console.log("45345",document.getElementById(tickMark.id))
+      selected.style.display = "block";
+      selected.style.display = "flex";
+      selected.style.flexDirection = "row";
+      tickMark.parentNode.remove();
+    });
+  }
+}
+  else{
+    console.log("RADIOeryterft", radioInput.parentNode.parentNode.parentNode.parentNode.nextSibling.nextSibling.firstChild.nextSibling.nextSibling.nextSibling)
+  }
+}
+document.addEventListener("change", function (event) {
+  if (event.target.classList.contains("radioBtnClass")) {
+     onRadioBtn(event);
+  }
+});
+async function deleteButton(event){
   let deletebtn=event.target
   let listItem=deletebtn.closest(".list-group-items")
   let deleteBtn=listItem.querySelector(".deletebtnClass")
   
   deleteBtn.parentNode.parentNode.parentNode.parentNode.remove()
+  console.log("ID",todoBaseUrl+`/${deleteBtn.parentNode.parentNode.parentNode.parentNode.id}`)
+  let response=await fetch(todoBaseUrl+`/${deleteBtn.parentNode.parentNode.parentNode.parentNode.id}`,{
+    method:"DELETE"
+  })
+  let data=await response.json()
+  console.log("Data",data)
+
 }
 //mongodb+srv://adilali:12345@adil.klapiyg.mongodb.net/?retryWrites=true&w=majority
-function editButton(event){
+async function editButton(event){
   console.log("FD",event.target.id)
   let editBtn = event.target;
   let listItem = editBtn.closest(".list-group-items");
@@ -37,13 +162,26 @@ function editButton(event){
   saveChange.setAttribute("id", `saveChangeBtn${i}`);
   saveChange.classList.add("saveChangebtnClass");
   editBtn.replaceWith(saveChange);
-  saveChange.addEventListener("click", (event) => {
+  saveChange.addEventListener("click", async(event) => {
     taskTitle.innerText = replacedTitle.value;
     replacedTitle.replaceWith(taskTitle);
     taskDetail.innerText = replaceDetail.value;
     replaceDetail.replaceWith(taskDetail);
     saveChange.parentNode.appendChild(deleteBtn);
     saveChange.parentNode.appendChild(editBtn);
+    console.log('dataid',todoBaseUrl+`/${saveChange.parentNode.parentNode.parentNode.parentNode.id}`)
+    let response=await fetch(todoBaseUrl+`/${saveChange.parentNode.parentNode.parentNode.parentNode.id}`,{
+      method:"PATCH",
+      body:JSON.stringify({
+         title:taskTitle.innerText,
+         details:taskDetail.innerText
+      }),
+      headers:{
+        'Content-type':'application/json'
+      }
+    })
+    let data=await response.json()
+    console.log("data",data)
     saveChange.remove();
   });
 
@@ -95,7 +233,7 @@ function addNewTask(event) {
   document.getElementById(`titleDetailsDiv${j}`).appendChild(saveTaskBtn);
 
   // on clicking save button
-  function onSaveTask(event) {
+ async function onSaveTask(event) {
     i++;
     console.log("i",i)
     title.remove();
@@ -134,7 +272,7 @@ function addNewTask(event) {
     // assigning ide and class to detail of task
     taskDetail.setAttribute("id", `taskDetail${i}`);
     taskDetail.classList.add("taskDetailClass");
-
+    
     newDivContainer.appendChild(newTitleDetailDiv);
 
     let btnsDiv = document.createElement("div");
@@ -162,95 +300,39 @@ function addNewTask(event) {
     newTitleDetailDiv.appendChild(btnsDiv);
 
     li.appendChild(newDivContainer);
+
     saveTaskBtn.parentNode.parentNode.parentNode.firstChild.nextSibling.appendChild(li);
     saveTaskBtn.remove()
-    
+    console.log("liid",li.id)
+    console.log("taskid",li.parentNode.parentNode.parentNode.id)
     // handling checkbox
     console.log("RADIO", radioInput.parentNode.parentNode.parentNode.parentNode.nextSibling.nextSibling.firstChild.nextSibling.nextSibling.nextSibling)
-    function onRadioBtn(event){
-      console.log("radiobut",event.target.value)
-      console.log("RADIO", radioInput.parentNode.parentNode.parentNode.parentNode.nextSibling.nextSibling.firstChild.nextSibling.nextSibling.nextSibling)
-      let dropDownMenu=document.getElementById(`dropdownmenu${j}`)
-      dropDownMenu.style.display="block"
-      if(radioInput.checked) {
-        radioInput.parentElement.style.display = "none";
-        console.log("Checked");
-        let ele = radioInput.nextSibling.firstChild.innerText;
-        let eleDetail = radioInput.nextSibling.firstChild.nextSibling.innerText;
-        completedTasks.push({
-          title: ele,
-          detail: eleDetail,
-        });
-        console.log("HI", completedTasks);
-        document.getElementById(
-          `compltetedLength${j}`
-        ).innerHTML = `Completed(${completedTasks.length})`;
-        let newTaskDiv = document.createElement("div");
-        newTaskDiv.setAttribute("id", `newTaskDiv${i}`);
-        newTaskDiv.classList.add("newtaskDivClass");
-        let completedTaskTitle = document.createElement("del");
-        completedTaskTitle.setAttribute("id", `completedTaskTitle${i}`);
-        completedTaskTitle.innerHTML = ele;
-        completedTaskTitle.classList.add('completedTaskTitleClass')
-        let compTaskDelBtn = document.createElement("i");
-        compTaskDelBtn.addEventListener("mouseenter", (event) => {
-          compTaskDelBtn.style.color = "red";
-        });
-        compTaskDelBtn.addEventListener("mouseleave", (event) => {
-          compTaskDelBtn.style.color = "black";
-        });
-        let tickMark = document.createElement("i");
-        tickMark.classList.add("fa-regular", "fa-check");
-
-        tickMark.setAttribute("id", newDivContainer.id);
-        tickMark.style.cursor = "pointer";
-        compTaskDelBtn.classList.add("fa-solid", "fa-trash", "compTaskDelBtn");
-        console.log("new",document.getElementById(`dropdownitems${j}`))
-        let dropdownitems = document.getElementById(`dropdownitems${j}`);
-        newTaskDiv.appendChild(tickMark);
-        newTaskDiv.appendChild(completedTaskTitle);
-        newTaskDiv.appendChild(compTaskDelBtn);
-        
-        radioInput.parentNode.parentNode.parentNode.parentNode.nextSibling.nextSibling.firstChild.nextSibling.nextSibling.nextSibling.appendChild(newTaskDiv);
-        // radioInput.parentNode.remove()
-        compTaskDelBtn.addEventListener("click", (event) => {
-          
-          compTaskDelBtn.parentNode.remove();
-          newDivContainer.style.display = "none";
-          let newList = completedTasks.filter((item) => {
-            return item.title != radioInput.nextSibling.firstChild.innerText;
-          });
-          completedTasks = newList;
-          document.getElementById(
-            `compltetedLength${i}`
-          ).innerHTML = `Completed(${completedTasks.length})`;
-        });
-
-        tickMark.addEventListener("click", (event) => {
-          let newListAfterUndelete=completedTasks.filter((item)=>{
-           return tickMark.nextSibling.innerText!=item.title
-          })
-          completedTasks=newListAfterUndelete
-          document.getElementById(
-            `compltetedLength${j}`
-          ).innerHTML = `Completed(${completedTasks.length})`;
-          let selected = document.getElementById(tickMark.id);
-          console.log("45345",document.getElementById(tickMark.id))
-          selected.style.display = "block";
-          selected.style.display = "flex";
-          selected.style.flexDirection = "row";
-          tickMark.parentNode.remove();
-        });
-      }
-      else{
-        console.log("RADIOeryterft", radioInput.parentNode.parentNode.parentNode.parentNode.nextSibling.nextSibling.firstChild.nextSibling.nextSibling.nextSibling)
-      }
+    const postObject={
+      user:window.localStorage.getItem('user').toString(),
+      listId:li.parentNode.parentNode.parentNode.id.toString(),
+      taskId:li.id.toString(),
+      title:taskTitle.innerHTML.toString(),
+      details:taskDetail.innerHTML.toString(),
+      completed:false
     }
-    radioInput.addEventListener('change',onRadioBtn)
+   let response=await fetch(todoBaseUrl,{
+      method:"POST",
+      body:JSON.stringify(postObject),
+      headers:{"Content-type": "application/json"}
+    })
+    let data=await response.json()
+    console.log("data",data)
+
+    // radioInput.addEventListener('change',onRadioBtn)
   }
  
   document.getElementById(`saveBtn${j}`).addEventListener("click", onSaveTask);
   console.log(document.getElementsByClassName("radioBtnClass"));
+  const radioInputs = document.querySelectorAll(".radioBtnClass");
+  radioInputs.forEach((radioInput) => {
+    radioInput.addEventListener("change", onRadioBtn);
+  });
+  
 }
 console.log(document.getElementById("newTaskAdded"));
 // clicking on completed div

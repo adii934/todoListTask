@@ -1,11 +1,17 @@
 const userName=document.getElementById("gmail").value
 const pass=document.getElementById("pass").value
-const user=[
-    {
-        email:"adil@12345",
-        pass:"12345"
-    }  
-]
+var users=[]
+const userBaseUrl="http://localhost:3500/user"
+async function getUsers(){
+    let response=await fetch(userBaseUrl)
+    let data=await response.json()
+    console.log(data)
+    data.forEach(element => {
+        users.push(element)
+    });
+}
+getUsers()
+console.log("users",users)
 
 function onSubmit(event){
     event.preventDefault()
@@ -22,20 +28,22 @@ function onSubmit(event){
         passError.style.color="red"
     }
     else if(userName!="" && document.getElementById("pass").value!=""){
-        user.map((element)=>{
+        users.map((element)=>{
+            console.log("ELEMENT", element)
             if(element.email!=userName){
                 const emailError=document.getElementById('emailError')
                 emailError.innerText="User doesnot exist"
                 emailError.style.color="red"
             }
             else if(element.email==userName){
-                if(element.pass!=document.getElementById("pass").value){
+                if(element.password!=document.getElementById("pass").value){
                     const passError=document.getElementById('passError')
                     passError.innerText="Incorrect Password"
                     passError.style.color="red"
                 }
                 else{
-                    alert("OK")
+                    window.location.replace("http://127.0.0.1:5500/todoapp.html");
+                    window.localStorage.setItem('user',userName)
                     // user.push({
                     //     email:userName,
                     //     password:pass
@@ -47,4 +55,4 @@ function onSubmit(event){
     }
    
 }
-console.log("user",user)
+

@@ -4,7 +4,7 @@ const userRequests=require('../controllers/userController')
 userRouter.post('/user',(req,res)=>{
   userRequests.user(req,res)
 })
-userRouter.get('/user/:email',async(req,res)=>{
+userRouter.get('/user',async(req,res)=>{
     await userRequests.getUser(req,res)
 })
 userRouter.delete('/user/:email',async(req,res)=>{
