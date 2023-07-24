@@ -10,6 +10,18 @@ const user=async(req,res)=>{
         res.status(400).send(e.toString())
     }
 }
+
+const addList=async(req,res)=>{
+    console.log(req.body)
+    try{
+        const user=await userSchema.findOne({email:req.params.email})
+        const newList=await userSchema.findByIdAndUpdate({_id:user._id},{$push:{lists:{listId:req.body.listId,tasks:[]}}},{new:true})
+        res.status(200).send(newList)
+    }catch(e){
+        res.status(400).send(e.toString())
+    }
+}
+
 const getUser=async(req,res)=>{
     
     try{
@@ -46,6 +58,7 @@ const userRequests={
     user:user,
     getUser:getUser,
     deleteUser:deleteUser,
-    updateUser:updateUser
+    updateUser:updateUser,
+    addList:addList
 }
 module.exports=userRequests

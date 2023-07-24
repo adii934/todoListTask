@@ -1,13 +1,14 @@
 const mongoose=require('mongoose')
-const userSchema=new mongoose.Schema({
+const listSchema=new mongoose.Schema({
     email:{
         type:String,
         required:true
     },
-    password:{
+    listId:{
         type:String,
         required:true
     },
+    tasks:Array
 })
-const userModel=mongoose.model('user',userSchema)
-module.exports=userModel
+const listModel=mongoose.model('list',listSchema)
+module.exports=listModel

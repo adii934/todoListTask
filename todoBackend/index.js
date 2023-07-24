@@ -1,6 +1,7 @@
 const express=require("express")
 const bodyParser=require('body-parser')
 const todoRoute=require('./routes/todoRoutes')
+const listRouter=require('./routes/lisRoutes')
 const app=express()
 
 const cors=require('cors')
@@ -27,6 +28,7 @@ app.use(express.json())
 app.use(json())
 app.use(todoRoute)
 app.use(userRouter)
+app.use(listRouter)
 
 app.listen(3500,function(){
     console.log(`Server up and running at ${port}`)
